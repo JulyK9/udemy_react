@@ -8,6 +8,12 @@ const counterReducer = (state = { counter: 0 }, action) => {
     };
   }
 
+  if (action.type === "increase") {
+    return {
+      counter: state.counter + action.value, // action 객체의 속성으로 설정된 키값을 불러오는 것 => action의 payload 추출
+    };
+  }
+
   if (action.type === "decrement") {
     return {
       counter: state.counter - 1,
