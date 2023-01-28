@@ -1,5 +1,6 @@
 import classes from "./Counter.module.css";
 import { useSelector, useDispatch } from "react-redux"; // 리덕스 저장소의 데이터에 접근하기 위한 useSelector
+import { INCREMENT } from "../store";
 // import { Component } from "react"; // for 클래스 기반 컴포넌트 사용
 // import { connect } from "react-redux"; // 클래스 기반 컴포넌트에서도 리덕스를 연결해주는 방법
 
@@ -11,7 +12,7 @@ const Counter = () => {
   const toggleShow = useSelector((state) => state.showCounter);
 
   const incrementHandler = () => {
-    dispatch({ type: "increment" }); // dispatch 함수에 인자로 전달하는 객체는 type 속성을 명시해서 어떤 action 인지 알 수 있게
+    dispatch({ type: INCREMENT }); // dispatch 함수에 인자로 전달하는 객체는 type 속성을 명시해서 어떤 action 인지 알 수 있게
   };
 
   const increaseHandler = () => {

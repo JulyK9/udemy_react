@@ -1,11 +1,45 @@
 import { createStore } from "redux";
+import { createSlice } from "@reduxjs/toolkit";
 
 // 상태 객체는 하나로 다뤄져야 하므로 type에 따라 로직을 반영해서 리턴할 때 각 상태에 대한 로직을 모두 반영해줘야 함상태
 const initialState = { counter: 0, showCounter: true };
 
-// 상태와 액션을 정의하고 실행하는 리듀서 함수 설정
+// toolkit용 slice 생성
+createSlice({
+  name: "counter", // 상태 식별자
+  // initialState: initialState, // 초기 상태 설정
+  initialState, // 초기 상태 설정
+  reducers: {
+    increment(state) {
+      state.counter++; // toolkit은 immer 라는 내장 패키지를 사용해서 원본 상태를 변경되지 않게 해줘서 이렇게 사용 가능
+    },
+    decrement(state) {
+      state.counter--;
+    },
+    increase(state, action) {
+      // action에 붙는 데이터가 필요하다면 action을 매개변수로 받아서 사용
+      state.counter = state.counter + action.value;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
+
+export const INCREMENT = "increment";
+
+// store에 상태와 액션을 정의하고 실행하는 리듀서 함수 설정
 const counterReducer = (state = initialState, action) => {
-  if (action.type === "increment") {
+  if (action.type === INCREMENT) {
+    // state.counter++
+    // return state;
+    // return {
+    // counter: state.counter,
+    // showCounter: state.showCounter
+    // }
+    // 작동된다하더라도 절대 이런 방식으로 기존 원본 state를 직접 변형(mutate)해서는 안됨!!
+
+    // 항상 새로운 state 객체를 반환하며 거기서 재정의해줘야 함
     return {
       counter: state.counter + 1,
       showCounter: state.showCounter,
