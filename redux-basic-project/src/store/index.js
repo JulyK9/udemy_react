@@ -18,7 +18,9 @@ const counterSlice = createSlice({
     },
     increase(state, action) {
       // action에 붙는 데이터가 필요하다면 action을 매개변수로 받아서 사용
-      state.counter = state.counter + action.value;
+      // state.counter = state.counter + action.value;
+      // toolkit 에서는 payload 라는 정해진 필드명을 사용함 유의
+      state.counter = state.counter + action.payload;
     },
     toggleCounter(state) {
       state.showCounter = !state.showCounter;
@@ -26,7 +28,10 @@ const counterSlice = createSlice({
   },
 });
 
-export const INCREMENT = "increment";
+// counterSlice.actions // 액션 식별자에 접근하기 위한 값
+// counterSlice.actions.toggleCounter // 접근하여 해당 메서드를 호출하면 액션 객체가 생성됨
+
+// export const INCREMENT = "increment";
 
 // // store에 상태와 액션을 정의하고 실행하는 리듀서 함수 설정
 // const counterReducer = (state = initialState, action) => {
@@ -84,6 +89,9 @@ const store = configureStore({
   // configureStore가 여러 리듀서를 하나의 큰 리듀서로 병합함
   // reducer: { counter: counterSlice.reducer },
 });
+
+// 리듀서 메서드 이름을 key로 가진 객체를 counterActions 라는 변수로 정하고 export 해서 컴포넌트에서 가져다 사용
+export const counterActions = counterSlice.actions;
 
 // 리액트에서는 외부 컴포넌트에서 사용할 수 있도록 export
 export default store;
