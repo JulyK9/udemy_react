@@ -2,13 +2,15 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 
 // 상태 객체는 하나로 다뤄져야 하므로 type에 따라 로직을 반영해서 리턴할 때 각 상태에 대한 로직을 모두 반영해줘야 함상태
-const initialState = { counter: 0, showCounter: true };
+// const initialState = { counter: 0, showCounter: true };
+const initialCounterState = { counter: 0, showCounter: true }; // for 상태 관심사 분리
 
 // toolkit용 slice 생성
 const counterSlice = createSlice({
   name: "counter", // 상태 식별자
   // initialState: initialState, // 초기 상태 설정
-  initialState, // 초기 상태 설정
+  // initialState, // 초기 상태 설정
+  initialState: initialCounterState, // 초기 상태 설정
   reducers: {
     increment(state) {
       state.counter++; // toolkit은 immer 라는 내장 패키지를 사용해서 원본 상태를 변경되지 않게 해줘서 이렇게 사용 가능
@@ -75,6 +77,23 @@ const counterSlice = createSlice({
 //   return state;
 // };
 
+// 다른 slice를 생성
+const initialAuthState = {
+  isAuthenticated: false,
+};
+const authSlice = createSlice({
+  name: "auth",
+  initialState: initialAuthState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+    },
+  },
+});
+
 // 리덕스의 createStore 메서드로 저장소(store)를 생성
 // 저장소의 매개변수에 리듀서 함수를 구독
 // const store = createStore(counterReducer);
@@ -82,7 +101,11 @@ const counterSlice = createSlice({
 // toolkit용 configureStore로 store를 만들고 slice 에서 설정한 리듀서에 접근할 수 있도록 연결
 // const store = configureStore(counterSlice.reducer);
 const store = configureStore({
-  reducer: counterSlice.reducer,
+  // reducer: counterSlice.reducer,
+  reducer: {
+    counter: counterSlice.reducer, // 사용 컴포넌트에서 식별자를 통해 접근해줘야 함을 유의
+    auth: authSlice.reducer,
+  },
 
   // 상태 slice가 여러개인 큰 규모 앱 같은 경우 아래와 같이 객체를 설정해서
   // 객체 안에 원하는 속성 이름을 정하고 키값을 설정하고 리듀서 맵을 생성해서 사용할 수 있음
@@ -92,6 +115,8 @@ const store = configureStore({
 
 // 리듀서 메서드 이름을 key로 가진 객체를 counterActions 라는 변수로 정하고 export 해서 컴포넌트에서 가져다 사용
 export const counterActions = counterSlice.actions;
+// 컴포넌트에서 사용할 액션 추가
+export const authActions = authSlice.actions;
 
 // 리액트에서는 외부 컴포넌트에서 사용할 수 있도록 export
 export default store;
