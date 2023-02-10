@@ -21,11 +21,13 @@ const cartSlice = createSlice({
       // 기존에 없는 아이템인 경우
       if (!existingItem) {
         state.items.push({
-          itemId: newItem.id,
+          // itemId: newItem.id, 위에서 existingItem을 뽑아낼때 item.id로 기존 아이템을 비교하기 때문에 itemId가 아닌 id로 설정해줘야 함
+          id: newItem.id,
           price: newItem.price,
           quantity: 1,
           totalPrice: newItem.price,
-          title: newItem.title,
+          // title: newItem.title,
+          name: newItem.title,
         });
       } else {
         // 기존에 있는 아이템인 경우
