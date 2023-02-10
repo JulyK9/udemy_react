@@ -14,6 +14,10 @@ const cartSlice = createSlice({
       // action에 데이터가 추가되어야 하므로 action 을 매개변수로 받아서 사용
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
+
+      // 기존 아이템 유무 여부에 관계없이 총수량은 증가
+      state.totalQuantity++;
+
       // 기존에 없는 아이템인 경우
       if (!existingItem) {
         state.items.push({
@@ -34,6 +38,9 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(
         (item) => item.id === targetItem.id
       );
+      // 기존 아이템의 수량에 관계없이 총 수량은 하나씩 줄어듦
+      state.totalQuantity--;
+
       if (existingItem.quantity === 1) {
         // 배열에서 다른 모든 항목을 유지하면서 한 항목을 제거하기 위해 업데이트하는 방법(filter)
         state.items = state.items.filter((item) => item.id !== targetItem.id);
