@@ -36,16 +36,19 @@ const cartSlice = createSlice({
       }
     },
     removeItemToCart(state, action) {
-      const targetItem = action.payload;
-      const existingItem = state.items.find(
-        (item) => item.id === targetItem.id
-      );
+      // const targetItem = action.payload;
+      const id = action.payload;
+      // const existingItem = state.items.find(
+      //   (item) => item.id === targetItem.id
+      // );
+      const existingItem = state.items.find((item) => item.id === id);
       // 기존 아이템의 수량에 관계없이 총 수량은 하나씩 줄어듦
       state.totalQuantity--;
 
       if (existingItem.quantity === 1) {
         // 배열에서 다른 모든 항목을 유지하면서 한 항목을 제거하기 위해 업데이트하는 방법(filter)
-        state.items = state.items.filter((item) => item.id !== targetItem.id);
+        // state.items = state.items.filter((item) => item.id !== targetItem.id);
+        state.items = state.items.filter((item) => item.id !== id);
       } else {
         existingItem.quantity--;
         existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
