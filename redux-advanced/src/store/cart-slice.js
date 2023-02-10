@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-createSlice({
+const cartSlice = createSlice({
   name: "cart",
   initialState: {
     // 상태 슬라이스의 구조를 잘 생각해보는 게 중요해보임
@@ -29,6 +29,22 @@ createSlice({
         existingItem.totalPrice = existingItem.totalPrice + newItem.price; // 총가격 증가
       }
     },
-    removeItemToCar() {},
+    removeItemToCart(state, action) {
+      const targetItem = action.payload;
+      const existingItem = state.items.find(
+        (item) => item.id === targetItem.id
+      );
+      if (existingItem.quantity === 1) {
+        // 배열에서 다른 모든 항목을 유지하면서 한 항목을 제거하기 위해 업데이트하는 방법(filter)
+        state.items = state.items.filter((item) => item.id !== targetItem.id);
+      } else {
+        existingItem.quantity--;
+        existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
+      }
+    },
   },
 });
+
+export const cartActions = cartSlice.actions;
+
+export default cartSlice;
