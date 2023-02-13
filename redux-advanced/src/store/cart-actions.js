@@ -19,7 +19,16 @@ export const fetchCartData = () => {
 
     try {
       const cartData = await fetchData(); // 장바구니 데이터를 가져오기가 완료되면
-      dispatch(cartActions.replaceCart(cartData)); // 장바구니를 교체함
+      // dispatch(cartActions.replaceCart(cartData)); // 장바구니를 교체함
+      dispatch(
+        cartActions.replaceCart({
+          // 백엔드에서 장바구니가 빈 상태에서 페칭할 때 오류 해결
+          // replaceCart 에 전달하는 페이로드가 cartsData.items인 항목 키를 갖는 객체인지 또는 정의되지 않은 잘못된 빈 배열인지를 확인
+          // 이를 통해서 항목이 정의되지 않은 상태로 끝나지 않도록 하고 대신 빈 배열이 될 수 있도록 해줌
+          items: cartData.items || [], // 아이템이 없는 경우에는 빈 배열임
+          totalQuantity: cartData.totalQuantity,
+        })
+      );
     } catch (error) {
       dispatch(
         uiActions.showNotification({
@@ -60,7 +69,12 @@ export const sendCartData = (cart) => {
         "https://nextjs-course-e6529-default-rtdb.firebaseio.com/cart.json",
         {
           method: "PUT",
-          body: JSON.stringify(cart),
+          // body: JSON.stringify(cart), // changed 상태 데이터까지 백엔드로 보내는 불필요 발생
+          body: JSON.stringify({
+            // changed를 포함하지 않는 새로운 객체를 따로 생성하여 보내주기
+            items: cart.items,
+            totalQuantity: cart.totalQuantity,
+          }),
         }
       );
 
