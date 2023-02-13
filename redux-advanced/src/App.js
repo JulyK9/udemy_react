@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { uiActions } from "./store/ui-slice";
 import Notification from "./components/UI/Notification";
 
+let isInitial = true;
+
 function App() {
   const toggleCart = useSelector((state) => state.ui.cartIsVisible);
 
@@ -49,6 +51,12 @@ function App() {
       // 이 로직에서 응답 데이터는 크게 사용할 일이 없으므로
       // const responseData = await response.json();
     };
+
+    // 첫 로드이면 장바구니를 데이터를 백엔드로 보내지 않기 위해 설정
+    if (isInitial) {
+      isInitial = false; // 첫 렌더후에는 처음상태가 아니도록 바꿔줘야 하므로
+      return;
+    }
 
     // 응답이 정상이 아닐 때 catch로 에러 핸들링
     sendCartData().catch((error) => {
