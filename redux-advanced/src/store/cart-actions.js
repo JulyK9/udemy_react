@@ -18,8 +18,8 @@ export const fetchCartData = () => {
     };
 
     try {
-      const cartData = await fetchData();
-      dispatch(cartActions.replaceCart(cartData));
+      const cartData = await fetchData(); // 장바구니 데이터를 가져오기가 완료되면
+      dispatch(cartActions.replaceCart(cartData)); // 장바구니를 교체함
     } catch (error) {
       dispatch(
         uiActions.showNotification({

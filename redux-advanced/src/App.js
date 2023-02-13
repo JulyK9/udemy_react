@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 // import { uiActions } from "./store/ui-slice";
 import Notification from "./components/UI/Notification";
-import { sendCartData } from "./store/cart-actions";
+import { sendCartData, fetchCartData } from "./store/cart-actions";
 
 let isInitial = true;
 
@@ -15,6 +15,11 @@ function App() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.ui.notification);
+
+  // 처음 한번만 렌더되는 작업을 수행하기 위해 별도의 useEffect 로 구현
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, [dispatch]);
 
   useEffect(() => {
     // const sendCartData = async () => {
