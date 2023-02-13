@@ -8,11 +8,15 @@ const cartSlice = createSlice({
     items: [],
     totalQuantity: 0,
     // totalPrice: 0,
+    // 장바구니를 교체한 경우에는 변경하지 않지만, 항목을 추가하거나 제거하는 경우엔 변경하는 로직 적용을 위해 상태 속성 추가
+    // 이걸 통해서 특정 리듀서가 실행됐을 때만 상태를 바꿔주고, 컴포넌트에서 이 상태값에 따라 분기 처리할 수 있음
+    changed: false,
   },
   reducers: {
     replaceCart(state, action) {
       state.totalQuantity = action.payload.totalQuantity;
       state.items = action.payload.items;
+      // 이 리듀서를 실행할 때는 state.changed가 false로 유지
     },
     addItemToCart(state, action) {
       // action에 데이터가 추가되어야 하므로 action 을 매개변수로 받아서 사용
@@ -21,6 +25,9 @@ const cartSlice = createSlice({
 
       // 기존 아이템 유무 여부에 관계없이 총수량은 증가
       state.totalQuantity++;
+
+      // 장바구니에 항목을 추가하는 경우에는 변경
+      state.changed = true;
 
       // 기존에 없는 아이템인 경우
       if (!existingItem) {
@@ -48,6 +55,9 @@ const cartSlice = createSlice({
       const existingItem = state.items.find((item) => item.id === id);
       // 기존 아이템의 수량에 관계없이 총 수량은 하나씩 줄어듦
       state.totalQuantity--;
+
+      // 장바구니에 항목을 삭제하는 경우에는 변경
+      state.changed = true;
 
       if (existingItem.quantity === 1) {
         // 배열에서 다른 모든 항목을 유지하면서 한 항목을 제거하기 위해 업데이트하는 방법(filter)

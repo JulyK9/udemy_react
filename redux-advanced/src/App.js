@@ -17,6 +17,7 @@ function App() {
   const notification = useSelector((state) => state.ui.notification);
 
   // 처음 한번만 렌더되는 작업을 수행하기 위해 별도의 useEffect 로 구현
+  // 아래 useEffect 로직에서 cart 데이터의 종속성 배열 포함으로 장바구니 데이터를 페칭해오면, 보내는 로직도 실행되는 문제 발생
   useEffect(() => {
     dispatch(fetchCartData());
   }, [dispatch]);
@@ -72,10 +73,15 @@ function App() {
     //   // );
     // });
 
-    // 리덕스 툴킷에 기능이 내재되어 있다.
-    // 유형 프로퍼티가 있는 작업 개체만 허용하는 것이 아니라 함수를 반환하는 작업 크리에이터도 허용
-    // 실제로 작업 객체가 아닌 함수인 작업을 디스패치하는 것으로 확인되면 해당 함수를 자동으로 재실행 함
-    dispatch(sendCartData(cart));
+    // cart 데이터의 종속성 배열 포함으로 위의 useEffect 실행시 장바구니 데이터를 페칭해오면, 보내는 로직도 실행되는 문제 발생
+    // 장바구니에 아이템을 추가하거나 삭제할 때만 실행되도록 구현(교체할 때는 chaged가 바뀌지 않으므로 실행 안됨)
+    // 장바구니가 바뀌었는지 확인할 수 있음(분기처리 가능)
+    if (cart.changed) {
+      // 리덕스 툴킷에 기능이 내재되어 있다.
+      // 유형 프로퍼티가 있는 작업 개체만 허용하는 것이 아니라 함수를 반환하는 작업 크리에이터도 허용
+      // 실제로 작업 객체가 아닌 함수인 작업을 디스패치하는 것으로 확인되면 해당 함수를 자동으로 재실행 함
+      dispatch(sendCartData(cart));
+    }
   }, [cart, dispatch]);
 
   return (
